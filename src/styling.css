@@ -1,0 +1,119 @@
+:root {
+    --board-size: 10;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: monospace;
+}
+
+.container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: #cbcbcb;
+}
+
+.board-container {
+    display: grid;
+    grid-template-rows: repeat(var(--board-size), 60px);
+    grid-template-columns: repeat(var(--board-size), 60px);
+    gap: 3px;
+    background-color: #7C7C7C;
+    padding: 5px;
+    box-shadow: 2px 3px 10px 3px rgba(0, 0, 0, 0.75);
+}
+
+.tile {
+    padding: 10px;
+    background-color: blue;
+    text-align: center;
+    background: #bcbcbc;
+	border-bottom: 6px inset rgba(0,0,0,.5);
+	border-left: 6px inset rgba(0,0,0,.5);
+	border-right: 6px inset rgba(255,255,255,.5);
+	border-top: 6px inset rgba(255,255,255,.5);
+	box-sizing: border-box;
+	color: white;
+	cursor: pointer;
+	display: inline-block;
+	font-size: 2.2rem;
+	text-transform: uppercase;
+}
+
+.tile--clicked {
+    padding: 10px;
+    background: #bcbcbc;
+}
+
+.score-container {
+    background: #bcbcbc;
+    text-align: center;
+    box-shadow: 2px 3px 10px 3px rgba(0, 0, 0, 0.75);
+}
+
+.score-container--padding-btm {
+    background: #848484;
+    padding-bottom: 10px;
+}
+
+.score {
+    background-color: black;
+    color: red;
+    width: fit-content;
+    display: inline-flex;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-width: 0.25rem;
+    border-style: solid;
+    border-color: #8a8a8a;
+    box-shadow: 1px 2px 3px 2px rgba(0, 0, 0, 0.5);
+}
+
+.game-container {
+    background: #848484;
+    padding: 10px;
+    border: #c6c0c0;
+    border-style: solid;
+    border-width: 10px;
+}
+
+.window-asthetics {
+    background-color: #0062ff;
+    padding: 10px;
+    box-shadow: 2px 3px 10px 3px rgba(0, 0, 0, 1);
+    text-align: right;
+    border-radius: 10px;
+}
+
+.window-info {
+    display: flex;
+    justify-content: space-between;
+}
+
+.window-info > h2{
+    margin-top: 0.5rem;
+    margin-left: 0.5rem;
+    color: white;
+    font-weight: bolder;
+    font-size: 1.75rem;
+}
+
+.end-game {
+    background-color: white;
+    color: red;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    padding: 2px;
+    border-radius: 5px;
+    box-shadow: 1px 3px 5px 3px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+}
