@@ -47,11 +47,20 @@
 	text-transform: uppercase;
     justify-content: center;
     align-items: center;
+    text-align: center;
 }
 
 .tile--clicked {
     padding: 10px;
     background: #bcbcbc;
+    cursor: auto;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.tile--clicked > h1{
+    margin-top: 10%;
 }
 
 .score-container {

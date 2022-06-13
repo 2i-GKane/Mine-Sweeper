@@ -22,20 +22,92 @@ const App = () => {
   const[board, setBoard] = useState(getGameBoard(boardSize, mineCount));
   const[score, setScore] = useState(0);
   const[flags, setFlags] = useState(10);
-  const[remainingMines, setRemainingMines] = useState(mineCount);
+  const[remainingTiles, setRemainingTiles] = useState((boardSize*boardSize) - mineCount);
 
   const tileElements = getTileElements();
   document.querySelector(':root').style.setProperty('--board-size', boardSize);
 
+  useEffect(() => {
+    checkWinStatus();
+  })
+
+  const getAdjacentTiles = (posX, posY) => {
+    const adjacentTiles = [];
+
+    for(let x = posX-1; x < posX + 2; x++){
+      for(let y = posY-1; y < posY + 2; y++){
+        const currentTile = board[x]?.[y];
+
+        if(currentTile !== undefined) adjacentTiles.push(currentTile);
+      }
+    }
+
+    return adjacentTiles;
+  }
+
+  const endgame = (isWin) => {
+
+  }
+
+  const checkWinStatus = () => {
+    if(remainingTiles <= 0) endgame(true);
+  }
+
+  const showTileResult = (posX, posY) => {
+    const tile = board[posX][posY];
+    if(!tile.isRevealed){
+      const id = posX + "-" + posY;
+
+      const tileElement = document.getElementById(id);
+      tileElement.classList.remove("tile");
+      tileElement.classList.add("tile--clicked");
+
+      if(tile.isFlagged) flagTile(posX, posY);
+      tile.isRevealed = true;
+
+      setRemainingTiles((remainingTiles) => remainingTiles -1);
+    }
+    
+  }
+
   const handleTileClick = (posX, posY) => {
     const tile = board[posX][posY];
+    showTileResult(posX, posY);
+
     const id = posX + "-" + posY;
-
     const tileElement = document.getElementById(id);
-    tileElement.classList.remove("tile");
-    tileElement.classList.add("tile--clicked");
 
-    if(tile.isFlagged) flagTile(posX, posY);
+    if(!tile.isMine){
+      setScore((currentScore) => currentScore + 1);
+      const adjacentTiles = getAdjacentTiles(posX, posY);
+      let adjacentMinesCount = 0;
+
+      adjacentTiles.map((tile) => {
+        if(tile.isMine) adjacentMinesCount++;
+      })
+
+      if(adjacentMinesCount > 0){
+        let textColour;
+        tileElement.innerHTML = `<h1>${adjacentMinesCount}</h1>`;
+
+        if(adjacentMinesCount == 1) textColour = "#008cff";
+        else if(adjacentMinesCount == 2) textColour = "#009c12";
+        else if(adjacentMinesCount >= 3) textColour = "#b50213";
+
+        tileElement.style.color = textColour;
+
+      } else {
+        adjacentTiles.map((adjTile) => {
+            const adjX = adjTile.x;
+            const adjY = adjTile.y;
+
+            if(!adjTile.isRevealed) handleTileClick(adjX, adjY);
+        })
+      }
+
+    } else {
+      tileElement.innerHTML = `<h1>M</h1>`;
+    }
   }
 
   const flagTile = (posX, posY) => {
