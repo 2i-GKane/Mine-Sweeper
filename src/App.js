@@ -220,7 +220,7 @@ const App = () => {
         <div id="board" className="window-asthetics">
           <div className="window-info">
             <h2>Minesweeper</h2>
-            <FontAwesomeIcon className="end-game" onClick={() => {displayBoard(false); revealModal("modal-reset", true); revealModal("modal-lose", false); revealModal("modal-win", false)}} icon={faRectangleXmark}/>
+            <FontAwesomeIcon className="end-game" onClick={() => {if(!gameEnded){displayBoard(false); revealModal("modal-reset", true); revealModal("modal-lose", false); revealModal("modal-win", false)}}} icon={faRectangleXmark}/>
           </div>
           <div className="game-container">
             <div className="stats-bar">
