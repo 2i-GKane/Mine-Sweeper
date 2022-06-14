@@ -189,7 +189,7 @@ const App = () => {
     <div className="App">
       <div className="container">
         <LoseModal elementID="modal-lose" score={score} clickAction={() => resetGame()}/>
-        <WinModal elementID="modal-win" score={score} clickAction={() => resetGame()}/>
+        <WinModal elementID="modal-win" score={score + mineCount} clickAction={() => resetGame()}/>
         <ResetModal elementID="modal-reset" score={score} clickAction={() => {resetGame()}} secondaryAction={() => displayBoard(true)}/>
         <div id="board" className="window-asthetics">
           <div className="window-info">
