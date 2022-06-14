@@ -22,8 +22,8 @@
 
 .board-container {
     display: grid;
-    grid-template-rows: repeat(var(--board-size), 60px);
-    grid-template-columns: repeat(var(--board-size), 60px);
+    grid-template-rows: repeat(var(--board-size), 35px);
+    grid-template-columns: repeat(var(--board-size), 35px);
     gap: 3px;
     background-color: #7C7C7C;
     padding: 5px;
@@ -35,7 +35,7 @@
     background-color: blue;
     text-align: center;
     background: #bcbcbc;
-	border-bottom: 6px inset rgba(0,0,0,.5);
+	border-bottom: 3px inset rgba(0,0,0,.5);
 	border-left: 6px inset rgba(0,0,0,.5);
 	border-right: 6px inset rgba(255,255,255,.5);
 	border-top: 6px inset rgba(255,255,255,.5);
@@ -59,8 +59,9 @@
     text-align: center;
 }
 
-.tile--clicked > h1{
-    margin-top: 10%;
+.tile--clicked > h2{
+    vertical-align: middle;
+    font-weight: bolder;
 }
 
 .score-container {
@@ -182,7 +183,67 @@
 }
 
 .flag {
-    font-size: 2.5rem;
+    font-size: 1.5rem;
     color: red;
     display: none;
+    position: absolute;
+}
+
+.modal {
+    position: absolute;
+    background-color: #0062ff;
+    border-color: #0062ff;
+    border-width: 3px;
+    border-style: solid;
+    border-radius: 5px;
+    display: none;
+    box-shadow: 2px 3px 10px 3px rgba(0, 0, 0, 1);
+}
+
+.modal--title{
+    background-color: #0062ff;
+    color: white;
+    display: flex;
+    justify-content: center;
+}
+
+.modal--content {
+    background: #c6c0c0;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal--content > h2 {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.modal--content > h4 {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-top: -2rem;
+    margin-bottom: 1rem;
+}
+
+.modal--footer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.modal--footer > button{
+    background-color: #c6c0c0;
+    margin-bottom: 0.5rem;
+    padding-left: 0.1rem;
+    padding-right: 0.1rem;
+    border-width: 1px;
+    cursor: pointer;
+    box-shadow: 2px 2px 3px 2px rgba(0, 0, 0, 0.5);
+    margin-right: 10rem;
+    margin-left: 10rem;
 }

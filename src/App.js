@@ -6,6 +6,9 @@ import "./styling.css";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRectangleXmark, faFlag } from "@fortawesome/free-solid-svg-icons";
+import LoseModal from "./components/LoseModal";
+import WinModal from "./components/LoseModal";
+import ResetModal from "./components/ResetModal";
 
 function delay(time) {
   return new Promise(resolve => setTimeout(resolve, time));
@@ -20,16 +23,37 @@ const App = () => {
   const mineCount = 10;
 
   const[board, setBoard] = useState(getGameBoard(boardSize, mineCount));
+  const[tileElements, setTileElements] = useState(getTileElements());
   const[score, setScore] = useState(0);
   const[flags, setFlags] = useState(10);
   const[remainingTiles, setRemainingTiles] = useState((boardSize*boardSize) - mineCount);
+  const[gameEnded, setGameEnded] = useState(false);
 
-  const tileElements = getTileElements();
   document.querySelector(':root').style.setProperty('--board-size', boardSize);
 
   useEffect(() => {
     checkWinStatus();
   })
+
+  const resetTilesState = () => {
+    {tileElements.map(element => {
+      const posX = element.posX;
+      const posY = element.posY;
+
+      const tileID = posX + "-" + posY;
+      const tileElement = document.getElementById(tileID);
+
+      tileElement.classList.remove("tile--clicked");
+      tileElement.classList.add("tile");
+
+      tileElement.innerHTML = "";
+      //.style.display = "none";
+
+    })}
+  }
+  const resetGame = () => {
+    window.location.reload();
+  }
 
   const getAdjacentTiles = (posX, posY) => {
     const adjacentTiles = [];
@@ -46,11 +70,32 @@ const App = () => {
   }
 
   const endgame = (isWin) => {
+    if(!gameEnded){
+      setGameEnded((isGameEnded) => !isGameEnded);
+      displayBoard(false)
 
+      if(!isWin) revealModal("modal-lose", true);
+      else revealModal("modal-win", true);
+    }
+    
+  }
+
+  const revealModal = (id, shouldDisplay) => {
+    const modal = document.getElementById(id);
+
+    if(shouldDisplay) modal.style.display = "block";
+    else modal.style.display = "none";
+  }
+
+  const displayBoard = (shouldDisplay) => {
+    const boardElement = document.getElementById("board");
+
+    if(shouldDisplay) boardElement.style.display = "block";
+    else boardElement.style.display = "none";
   }
 
   const checkWinStatus = () => {
-    if(remainingTiles <= 0) endgame(true);
+    if(remainingTiles <= 0 && !gameEnded) endgame(true);
   }
 
   const showTileResult = (posX, posY) => {
@@ -76,6 +121,7 @@ const App = () => {
 
     const id = posX + "-" + posY;
     const tileElement = document.getElementById(id);
+    if(tile.isFlagged) flagTile(posX, posY);
 
     if(!tile.isMine){
       setScore((currentScore) => currentScore + 1);
@@ -88,7 +134,7 @@ const App = () => {
 
       if(adjacentMinesCount > 0){
         let textColour;
-        tileElement.innerHTML = `<h1>${adjacentMinesCount}</h1>`;
+        tileElement.innerHTML = `<h2>${adjacentMinesCount}</h2>`;
 
         if(adjacentMinesCount == 1) textColour = "#008cff";
         else if(adjacentMinesCount == 2) textColour = "#009c12";
@@ -102,18 +148,29 @@ const App = () => {
             const adjY = adjTile.y;
 
             if(!adjTile.isRevealed) handleTileClick(adjX, adjY);
+            if(adjTile.isFlagged){
+              const adjFlagID = "flag-" + adjX + "-" + adjY;
+              adjTile.isFlagged = false;
+              setFlags((currentFlags) => currentFlags + 1)
+
+              const flagElem = document.getElementById(adjFlagID);
+              if(flagElem !== null) flagElem.style.display = "none";
+            }
         })
       }
 
     } else {
-      tileElement.innerHTML = `<h1>M</h1>`;
+      endgame(false);
+      tileElement.innerHTML = `<h2>M</h2>`;
     }
   }
 
   const flagTile = (posX, posY) => {
     const tile = board[posX][posY];
+    const titleID = posX + "-" + posY;
     const id = "flag-" + posX + "-" + posY;
 
+    if(!document.getElementById(titleID).classList.contains("tile--clicked")){
       if(!tile.isFlagged){
         if(flags <= 0) return
 
@@ -126,16 +183,20 @@ const App = () => {
 
         document.getElementById(id).style.display = "none";
       }
+    } 
 
   }
 
   return (
     <div className="App">
       <div className="container">
-        <div className="window-asthetics">
+        <LoseModal elementID="modal-lose" score={score} clickAction={() => resetGame()}/>
+        <WinModal elementID="modal-win" score={score} clickAction={() => resetGame()}/>
+        <ResetModal elementID="modal-reset" score={score} clickAction={() => {resetGame()}} secondaryAction={() => displayBoard(true)}/>
+        <div id="board" className="window-asthetics">
           <div className="window-info">
             <h2>Minesweeper</h2>
-            <FontAwesomeIcon className="end-game" icon={faRectangleXmark}/>
+            <FontAwesomeIcon className="end-game" onClick={() => {displayBoard(false); revealModal("modal-reset", true)}} icon={faRectangleXmark}/>
           </div>
           <div className="game-container">
             <div className="stats-bar">

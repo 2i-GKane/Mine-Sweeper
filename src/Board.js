@@ -1,4 +1,4 @@
-const gameBoard = [];
+let gameBoard = [];
 let tileElements = [];
 
 const getTileElements = () => {
@@ -51,6 +51,7 @@ const getGameBoard = (size, mines) => {
     const currentMinePositions = getMines(size, mines);
 
     tileElements = [];
+    gameBoard = [];
 
     for(let posX = 0; posX < size; posX++){
         let currentRow = [];
