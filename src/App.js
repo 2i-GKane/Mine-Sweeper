@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { getGameBoard, getTileElements } from './Board';
+import { getGameBoard, getTileElements, getMinePositions } from './Board';
 
 import "./styling.css";
 
@@ -52,7 +52,6 @@ const App = () => {
   const endgame = (isWin) => {
     if(!gameEnded){
       setGameEnded((isGameEnded) => !isGameEnded);
-      handleTileClick(0,0,false);
       revealAllTiles();
 
       if(!isWin) revealModal("modal-lose", true);
@@ -138,13 +137,16 @@ const App = () => {
   const handleTileClick = (posX, posY, playerClick) => {
     const tile = board[posX][posY];
     if(!showTileResult(posX, posY)) return;
+    if(gameEnded) return;
 
     const id = posX + "-" + posY;
     const tileElement = document.getElementById(id);
     if(tile.isFlagged) flagTile(posX, posY);
 
     if(!tile.isMine){
+      console.log(tile);
       setScore((currentScore) => currentScore + 1);
+
       const adjacentTiles = getAdjacentTiles(posX, posY);
       let adjacentMinesCount = 0;
 
@@ -167,15 +169,18 @@ const App = () => {
             const adjX = adjTile.x;
             const adjY = adjTile.y;
 
-            if(!adjTile.isRevealed) handleTileClick(adjX, adjY, false);
-            if(adjTile.isFlagged){
-              const adjFlagID = "flag-" + adjX + "-" + adjY;
-              adjTile.isFlagged = false;
-              setFlags((currentFlags) => currentFlags + 1)
-
-              const flagElem = document.getElementById(adjFlagID);
-              if(flagElem !== null) flagElem.style.display = "none";
+            if(!adjTile.isMine){
+              if(!adjTile.isRevealed) handleTileClick(adjX, adjY, false);
+              if(adjTile.isFlagged){
+                const adjFlagID = "flag-" + adjX + "-" + adjY;
+                adjTile.isFlagged = false;
+                setFlags((currentFlags) => currentFlags + 1)
+  
+                const flagElem = document.getElementById(adjFlagID);
+                if(flagElem !== null) flagElem.style.display = "none";
+              }
             }
+            
         })
       }
 

@@ -1,12 +1,17 @@
 let gameBoard = [];
 let tileElements = [];
+let minePositions = []
 
 const getTileElements = () => {
     return tileElements;
 }
 
+const getMinePositions = () => {
+    return minePositions;
+}
+
 const getMines = (boardSize, mines) => {
-    let minePositions = [];
+    minePositions = [];
 
     while(minePositions.length < mines){
         const randX = Math.floor(Math.random() * boardSize);
@@ -83,4 +88,4 @@ const getGameBoard = (size, mines) => {
 
 
 
-export { getGameBoard, getTileElements };
+export { getGameBoard, getTileElements, getMinePositions, checkIsMine };
