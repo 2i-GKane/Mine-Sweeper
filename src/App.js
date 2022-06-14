@@ -7,7 +7,7 @@ import "./styling.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRectangleXmark, faFlag } from "@fortawesome/free-solid-svg-icons";
 import LoseModal from "./components/LoseModal";
-import WinModal from "./components/LoseModal";
+import WinModal from "./components/WinModal";
 import ResetModal from "./components/ResetModal";
 
 document.addEventListener("contextmenu", (event) => {
