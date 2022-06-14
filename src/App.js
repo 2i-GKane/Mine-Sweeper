@@ -31,20 +31,6 @@ const App = () => {
     checkWinStatus();
   })
 
-  const resetTilesState = () => {
-    {tileElements.map(element => {
-      const posX = element.posX;
-      const posY = element.posY;
-
-      const tileID = posX + "-" + posY;
-      const tileElement = document.getElementById(tileID);
-
-      tileElement.classList.remove("tile--clicked");
-      tileElement.classList.add("tile");
-
-      tileElement.innerHTML = "";
-    })}
-  }
   const resetGame = () => {
     window.location.reload();
   }
@@ -66,12 +52,48 @@ const App = () => {
   const endgame = (isWin) => {
     if(!gameEnded){
       setGameEnded((isGameEnded) => !isGameEnded);
-      displayBoard(false)
+      handleTileClick(0,0,false);
+      revealAllTiles();
 
       if(!isWin) revealModal("modal-lose", true);
       else revealModal("modal-win", true);
     }
     
+  }
+
+  const revealAllTiles = () => {
+    for(let x = 0; x < boardSize; x++){
+      for(let y = 0; y < boardSize; y++){
+        const tile = board[x][y];
+
+        const tileElem = document.getElementById(x + "-" + y);
+        if(tile.isMine){
+          showTileResult(x,y);
+          tileElem.innerHTML = `<h2>M</h2>`;
+        } else {
+          let adjacentMines = 0;
+          const adjacentTiles = getAdjacentTiles(x, y);
+
+          adjacentTiles.map((adjTile) => {
+              if(adjTile.isMine) adjacentMines++;
+          })
+
+          showTileResult(x,y);
+          if(adjacentMines > 0){
+            let textColour;
+            tileElem.innerHTML = `<h2>${adjacentMines}</h2>`;
+  
+            if(adjacentMines == 1) textColour = "#008cff";
+            else if(adjacentMines == 2) textColour = "#009c12";
+            else if(adjacentMines >= 3) textColour = "#b50213";
+  
+            tileElem.style.color = textColour;
+          }
+          
+        }
+      }
+    }
+
   }
 
   const revealModal = (id, shouldDisplay) => {
@@ -105,13 +127,14 @@ const App = () => {
       tile.isRevealed = true;
 
       setRemainingTiles((remainingTiles) => remainingTiles -1);
-    }
+    } else return false;
     
+    return true;
   }
 
   const handleTileClick = (posX, posY, playerClick) => {
     const tile = board[posX][posY];
-    showTileResult(posX, posY);
+    if(!showTileResult(posX, posY)) return;
 
     const id = posX + "-" + posY;
     const tileElement = document.getElementById(id);
@@ -122,8 +145,8 @@ const App = () => {
       const adjacentTiles = getAdjacentTiles(posX, posY);
       let adjacentMinesCount = 0;
 
-      adjacentTiles.map((tile) => {
-        if(tile.isMine) adjacentMinesCount++;
+      adjacentTiles.map((adjTile) => {
+        if(adjTile.isMine) adjacentMinesCount++;
       })
 
       if(adjacentMinesCount > 0){
@@ -194,7 +217,7 @@ const App = () => {
         <div id="board" className="window-asthetics">
           <div className="window-info">
             <h2>Minesweeper</h2>
-            <FontAwesomeIcon className="end-game" onClick={() => {displayBoard(false); revealModal("modal-reset", true)}} icon={faRectangleXmark}/>
+            <FontAwesomeIcon className="end-game" onClick={() => {displayBoard(false); revealModal("modal-reset", true); revealModal("modal-lose", false); revealModal("modal-win", false)}} icon={faRectangleXmark}/>
           </div>
           <div className="game-container">
             <div className="stats-bar">
