@@ -10,10 +10,6 @@ import LoseModal from "./components/LoseModal";
 import WinModal from "./components/LoseModal";
 import ResetModal from "./components/ResetModal";
 
-function delay(time) {
-  return new Promise(resolve => setTimeout(resolve, time));
-}
-
 document.addEventListener("contextmenu", (event) => {
   event.preventDefault();
 });
@@ -47,8 +43,6 @@ const App = () => {
       tileElement.classList.add("tile");
 
       tileElement.innerHTML = "";
-      //.style.display = "none";
-
     })}
   }
   const resetGame = () => {
