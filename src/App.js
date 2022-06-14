@@ -109,7 +109,7 @@ const App = () => {
     
   }
 
-  const handleTileClick = (posX, posY) => {
+  const handleTileClick = (posX, posY, playerClick) => {
     const tile = board[posX][posY];
     showTileResult(posX, posY);
 
@@ -141,7 +141,7 @@ const App = () => {
             const adjX = adjTile.x;
             const adjY = adjTile.y;
 
-            if(!adjTile.isRevealed) handleTileClick(adjX, adjY);
+            if(!adjTile.isRevealed) handleTileClick(adjX, adjY, false);
             if(adjTile.isFlagged){
               const adjFlagID = "flag-" + adjX + "-" + adjY;
               adjTile.isFlagged = false;
@@ -154,8 +154,12 @@ const App = () => {
       }
 
     } else {
-      endgame(false);
-      tileElement.innerHTML = `<h2>M</h2>`;
+      if(playerClick){
+        endgame(false);
+        tileElement.innerHTML = `<h2>M</h2>`;
+
+        console.log("Clicked Mine Location: " + posX + ", " + posY)
+      }
     }
   }
 
@@ -210,7 +214,7 @@ const App = () => {
                 const posX = element.posX;
                 const posY = element.posY;
 
-                return <div key={posX + "-" + posY} onClick={() => handleTileClick(posX, posY)} onContextMenu={() => flagTile(posX, posY)} className="tile" id={posX + "-" + posY} board-size={boardSize} pos-x={posX} pos-y={posY}><FontAwesomeIcon className="flag" id={"flag-" + posX + "-" + posY} icon={faFlag}/></div>
+                return <div key={posX + "-" + posY} onClick={() => handleTileClick(posX, posY, true)} onContextMenu={() => flagTile(posX, posY)} className="tile" id={posX + "-" + posY} board-size={boardSize} pos-x={posX} pos-y={posY}><FontAwesomeIcon className="flag" id={"flag-" + posX + "-" + posY} icon={faFlag}/></div>
               })}
             </div>
           </div>
